@@ -31,7 +31,7 @@ class NumbersSolver(object):
                 for op in self._ops:
                     x, y = comb
                     result = self._ops[op](x, y)
-                    if result > 0 and result != max(x, y):
+                    if result > 0 and result != x and result != y:
                         new_numbers = numbers_list[:]
                         new_numbers.remove(x)
                         new_numbers.remove(y)
@@ -46,13 +46,12 @@ class NumbersSolver(object):
                                 approx[0] = result - target
                                 approx['sol'] = new_sol
 
-                            if not (best and len(best) <= len(new_sol)):
-                                if result == target or len(new_numbers) > 1:
-                                    memoization['rec'] += 1
-                                    sol = self._inner_lookup(result, target, approx, permutations(new_numbers, 2),
-                                                             new_numbers, new_sol, best, memoization)
+                            if (not best or len(best) > len(new_sol)) and len(new_numbers) > 1:
+                                memoization['rec'] += 1
+                                sol = self._inner_lookup(result, target, approx, permutations(new_numbers, 2),
+                                                         new_numbers, new_sol, best, memoization)
 
-                                    if sol:
-                                        best = sol[:]
+                                if sol:
+                                    best = sol[:]
 
         return best
